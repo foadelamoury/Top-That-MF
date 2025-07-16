@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4f122c35734336249acf5ff7323432b7
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Prefabs/Environment/Grass.prefab
+  uploadId: 398611

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 73035f974857c94489896440d1e2b9e8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Materials/Slippery.physicsMaterial2D
+  uploadId: 398611

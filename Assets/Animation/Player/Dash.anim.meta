@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 672d90e35c9f5cf429ca6168588129e0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Animation/Player/Dash.anim
+  uploadId: 398611

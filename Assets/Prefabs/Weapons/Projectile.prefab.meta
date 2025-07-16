@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 340067e8e5a097546ad175f1d00a6ece
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Prefabs/Weapons/Projectile.prefab
+  uploadId: 398611

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5ff4409926f4822409c8003d703f6dc5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Animation/Scripts/PlaySoundBehaviour.cs
+  uploadId: 398611

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 6bddbe7cb6a305140b8c616bb9082a74
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Animation/Scripts/JumpStateBehaviour.cs
+  uploadId: 398611
