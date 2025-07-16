@@ -79,6 +79,7 @@ public class CharacterController2D : MonoBehaviour
                 break; // Exit loop once we find ground
             }
         }
+        
 
         // Handle landing - only when transitioning from not grounded to grounded
         if (m_Grounded && !wasGrounded)
@@ -149,6 +150,13 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.layer == 8)
+        {
+            m_Grounded = true;
+        }
+    }
     public void Move(float move, bool jump, bool dash)
     {
         if (canMove)
