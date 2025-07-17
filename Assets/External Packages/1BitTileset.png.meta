@@ -271,10 +271,10 @@ TextureImporter:
       name: 1BitTileset_6
       rect:
         serializedVersion: 2
-        x: 95
-        y: 48
-        width: 48
-        height: 48
+        x: 112
+        y: 59
+        width: 15
+        height: 18
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -293,10 +293,10 @@ TextureImporter:
       name: 1BitTileset_7
       rect:
         serializedVersion: 2
-        x: 144
-        y: 48
-        width: 48
-        height: 48
+        x: 160
+        y: 59
+        width: 15
+        height: 17
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -307,6 +307,28 @@ TextureImporter:
       bones: []
       spriteID: a57dd3b14e5efae48a4ca0fbbf8450e8
       internalID: 527143589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 1BitTileset_8
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 93
+        width: 4
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9238c2d0d4ff0cb4dbd08e2b748e69b0
+      internalID: 1626642758
       vertices: []
       indices: 
       edges: []
@@ -333,6 +355,7 @@ TextureImporter:
       1BitTileset_5: 934582183
       1BitTileset_6: -2146543271
       1BitTileset_7: 527143589
+      1BitTileset_8: 1626642758
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
