@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6cc4fbe9cea41a246b09c2c4f97fa702
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Prefabs/Particles/SmokeTrail 1.prefab
+  uploadId: 398611

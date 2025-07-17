@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c928b20c45c6dcd458c1b9a8c6226d54
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Prefabs/Weapons/ProjectileDestructible.prefab
+  uploadId: 398611

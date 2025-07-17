@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 751891a84c2d8ad478073df8df3017bf
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 166731
+  packageName: Metroidvania Controller
+  packageVersion: 1.2
+  assetPath: Assets/MetroidvaniaController/Animation/Player/WallSlidding.anim
+  uploadId: 398611
