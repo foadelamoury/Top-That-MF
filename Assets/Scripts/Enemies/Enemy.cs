@@ -46,10 +46,6 @@ public class Enemy : MonoBehaviour {
         Vector2 direction = Vector2.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
 
        
-         if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Ground"))
-        {
-            HandleWallCollision(direction);
-        }
          if(collision.gameObject.CompareTag("Player"))
         {
             Destroy(collision.gameObject);
