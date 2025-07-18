@@ -1,6 +1,7 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class CharacterController2D : MonoBehaviour
@@ -46,6 +47,8 @@ public class CharacterController2D : MonoBehaviour
 
     public UnityEvent OnFallEvent;
     public UnityEvent OnLandEvent;
+
+    
 
     [System.Serializable]
     public class BoolEvent : UnityEvent<bool> { }

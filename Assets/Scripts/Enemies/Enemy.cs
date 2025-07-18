@@ -1,23 +1,33 @@
-using UnityEngine;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class Enemy : MonoBehaviour {
-
+public class Enemy : MonoBehaviour
+{
     [Header("Ball Settings")]
     [SerializeField] float speed = 10f;
     [SerializeField] float maxSpeed = 20f;
     [SerializeField] float speedIncrement = 0.5f;
 
-  
+    [Header("UI Animation")]
+    [SerializeField] TextMeshProUGUI LoseText;
+    [SerializeField] UIAutoAnimation uiAnimation; // Reference to UIAutoAnimation component
+
+    [Header("Scene Reload Settings")]
+    [SerializeField] float delayBeforeReload = 2f; // Time to wait before reloading scene
 
     private Rigidbody2D rb;
     private Vector2 lastVelocity;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        // If uiAnimation is not assigned in inspector, try to find it
+        if (uiAnimation == null)
+        {
+            uiAnimation = FindAnyObjectByType<UIAutoAnimation>();
+        }
         LaunchBall();
     }
 
@@ -25,13 +35,11 @@ public class Enemy : MonoBehaviour {
     {
         // Store the velocity for collision calculations
         lastVelocity = rb.linearVelocity;
-
         // Clamp the speed to prevent it from getting too fast
         if (rb.linearVelocity.magnitude > maxSpeed)
         {
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
         }
-
         // Prevent the ball from getting stuck moving too vertically
         if (Mathf.Abs(rb.linearVelocity.y) > Mathf.Abs(rb.linearVelocity.x) * 3f)
         {
@@ -45,38 +53,50 @@ public class Enemy : MonoBehaviour {
         // Calculate reflection
         Vector2 direction = Vector2.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
 
-       
-         if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
+            // Start the game over coroutine
+            StartCoroutine(HandleGameOver());
+
+            // Destroy the player object
             Destroy(collision.gameObject);
         }
-      
     }
 
+    // Coroutine to handle game over sequence
+    IEnumerator HandleGameOver()
+    {
+        // Stop the ball movement
+        rb.linearVelocity = Vector2.zero;
 
+        // Show the lose text and trigger UI animation
+        if (uiAnimation != null)
+        {
+            LoseText.gameObject.SetActive(true); // Show the lose text
+            uiAnimation.EntranceAnimation(); // This will trigger the entrance animation
+        }
+
+        // Wait for the specified delay (allows UI animation to complete)
+        yield return new WaitForSeconds(delayBeforeReload);
+
+        // Reload the current scene
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+    }
 
     void HandleWallCollision(Vector2 direction)
     {
         // Simple reflection for walls
         rb.linearVelocity = direction * lastVelocity.magnitude;
-
     }
-
-   
-
-
 
     void LaunchBall()
     {
         // Random direction (left or right)
         float x = Random.Range(0, 2) == 0 ? -1 : 1;
         float y = Random.Range(-1f, 1f);
-
         Vector2 direction = new Vector2(x, y).normalized;
         rb.linearVelocity = direction * speed;
     }
-
- 
 
     // Public method to manually set ball direction (useful for testing)
     public void SetDirection(Vector2 direction)
@@ -88,5 +108,22 @@ public class Enemy : MonoBehaviour {
     public float GetCurrentSpeed()
     {
         return rb.linearVelocity.magnitude;
+    }
+
+    // Public methods to trigger UI animations
+    public void TriggerEntranceAnimation()
+    {
+        if (uiAnimation != null)
+        {
+            uiAnimation.EntranceAnimation();
+        }
+    }
+
+    public void TriggerExitAnimation()
+    {
+        if (uiAnimation != null)
+        {
+            uiAnimation.ExitAnimation();
+        }
     }
 }
