@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Jump pressed");
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             dash = true;
         }
