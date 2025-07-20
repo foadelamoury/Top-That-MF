@@ -41,6 +41,21 @@ public class OpenDoor : MonoBehaviour
         yield return new WaitForSeconds(delayBeforeReload);
 
         // Reload the scene
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        // Calculate the index of the next scene
+        int nextSceneIndex = currentSceneIndex + 1;
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            // Load the next scene by index
+            SceneManager.LoadScene(nextSceneIndex);
+        }
+        else
+        {
+            Debug.LogWarning("No next scene available in build settings.");
+            // Optionally, load a default scene or loop back to the first scene
+            SceneManager.LoadScene(0);
+        }
     }
 }
