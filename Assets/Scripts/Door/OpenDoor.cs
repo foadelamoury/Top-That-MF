@@ -3,59 +3,38 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class OpenDoor : MonoBehaviour
-{
+public class OpenDoor : MonoBehaviour {
     [Header("UI Animation")]
     [SerializeField] TextMeshProUGUI winText;
-    [SerializeField] UIAutoAnimation uiAnimation; // Reference to UIAutoAnimation component
+    [SerializeField] UIAutoAnimation uiAnimation;
+
+    [Header("Scene Reload Settings")]
+    [SerializeField] float delayBeforeReload = 2f;
 
     Animator animator;
 
-    [Header("Scene Reload Settings")]
-    [SerializeField] float delayBeforeReload = 2f; // Time to wait before reloading scene
+    void Start() => animator = GetComponent<Animator>();
 
+    void OnTriggerEnter2D(Collider2D collision) {
+        if (!collision.gameObject.CompareTag("Player")) return;
 
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Trigger UI animation before destroying player
-            if (uiAnimation != null)
-            {
-                winText.gameObject.SetActive(true); // Show the win text
-                uiAnimation.EntranceAnimation(); // This will trigger the entrance animation
-                animator.SetTrigger("IsOpen");
-                // Start the delayed reload coroutine
-                StartCoroutine(DelayedSceneReload());
-            }
+        if (uiAnimation != null) {
+            winText.gameObject.SetActive(true);
+            uiAnimation.EntranceAnimation();
         }
+        animator.SetTrigger("IsOpen");
+        StartCoroutine(DelayedSceneReload());
     }
 
-    private IEnumerator DelayedSceneReload()
-    {
-        // Wait for the specified delay
+    IEnumerator DelayedSceneReload() {
         yield return new WaitForSeconds(delayBeforeReload);
 
-        // Reload the scene
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int current = SceneManager.GetActiveScene().buildIndex;
+        int next = current + 1;
 
-        // Calculate the index of the next scene
-        int nextSceneIndex = currentSceneIndex + 1;
-        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
-        {
-            // Load the next scene by index
-            SceneManager.LoadScene(nextSceneIndex);
-        }
+        if (next < SceneManager.sceneCountInBuildSettings)
+            SceneManager.LoadScene(next);
         else
-        {
-            Debug.LogWarning("No next scene available in build settings.");
-            // Optionally, load a default scene or loop back to the first scene
             SceneManager.LoadScene(0);
-        }
     }
 }

@@ -1,36 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ThrowableWeapon : MonoBehaviour
-{
-	public Vector2 direction;
-	public bool hasHit = false;
-	public float speed = 10f;
+public class ThrowableWeapon : MonoBehaviour {
+    public Vector2 direction;
+    public float speed = 10f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    private bool hasHit = false;
+    private Rigidbody2D rb;
+
+    void Awake() => rb = GetComponent<Rigidbody2D>();
+
+    void FixedUpdate() {
+        if (!hasHit && rb != null)
+            rb.linearVelocity = direction * speed;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-		if ( !hasHit)
-		GetComponent<Rigidbody2D>().linearVelocity = direction * speed;
-	}
+    void OnCollisionEnter2D(Collision2D collision) {
+        if (hasHit) return; // prevent double-processing on rapid contacts
+        hasHit = true;
 
-	void OnCollisionEnter2D(Collision2D collision)
-	{
-		if (collision.gameObject.tag == "Enemy")
-		{
-			collision.gameObject.SendMessage("ApplyDamage", Mathf.Sign(direction.x) * 2f);
-			Destroy(gameObject);
-		}
-		else if (collision.gameObject.tag != "Player")
-		{
-			Destroy(gameObject);
-		}
-	}
+        if (collision.gameObject.CompareTag("Enemy")) {
+            collision.gameObject.SendMessage("ApplyDamage", Mathf.Sign(direction.x) * 2f);
+            Destroy(gameObject);
+            return;
+        }
+
+        if (!collision.gameObject.CompareTag("Player")) {
+            Destroy(gameObject);
+        }
+    }
 }

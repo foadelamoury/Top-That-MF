@@ -1,57 +1,37 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CameraFollow : MonoBehaviour
-{
-	public float FollowSpeed = 2f;
-	public Transform Target;
+public class CameraFollow : MonoBehaviour {
+    public float FollowSpeed = 2f;
+    public Transform Target;
 
-	// Transform of the camera to shake. Grabs the gameObject's transform
-	// if null.
-	private Transform camTransform;
+    Transform camTransform;
+    public float shakeDuration = 0f;
+    public float shakeAmount = 0.1f;
+    public float decreaseFactor = 1.0f;
 
-	// How long the object should shake for.
-	public float shakeDuration = 0f;
+    Vector3 originalPos;
 
-	// Amplitude of the shake. A larger value shakes the camera harder.
-	public float shakeAmount = 0.1f;
-	public float decreaseFactor = 1.0f;
+    void Awake() {
+        Cursor.visible = false;
+        camTransform = camTransform ?? (Transform)GetComponent(typeof(Transform));
+    }
 
-	Vector3 originalPos;
+    void OnEnable() => originalPos = camTransform.localPosition;
 
-	void Awake()
-	{
-		Cursor.visible = false;
-		if (camTransform == null)
-		{
-			camTransform = GetComponent(typeof(Transform)) as Transform;
-		}
-	}
+    void Update() {
+        if (Target != null) {
+            Vector3 newPosition = Target.position; newPosition.z = -10;
+            transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
+        }
 
-	void OnEnable()
-	{
-		originalPos = camTransform.localPosition;
-	}
+        if (shakeDuration > 0) {
+            camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
+            shakeDuration -= Time.deltaTime * decreaseFactor;
+        }
+    }
 
-	private void Update()
-	{
-		if(Target == null) return;
-		Vector3 newPosition = Target.position;
-		newPosition.z = -10;
-		transform.position = Vector3.Slerp(transform.position, newPosition, FollowSpeed * Time.deltaTime);
-
-		if (shakeDuration > 0)
-		{
-			camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;
-
-			shakeDuration -= Time.deltaTime * decreaseFactor;
-		}
-	}
-
-	public void ShakeCamera()
-	{
-		originalPos = camTransform.localPosition;
-		shakeDuration = 0.2f;
-	}
+    public void ShakeCamera() {
+        originalPos = camTransform.localPosition;
+        shakeDuration = 0.2f;
+    }
 }

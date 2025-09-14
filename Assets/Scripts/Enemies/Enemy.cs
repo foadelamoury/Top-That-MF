@@ -3,159 +3,95 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Enemy : MonoBehaviour
-{
+public class Enemy : MonoBehaviour {
     [Header("Ball Settings")]
     [SerializeField] float speed = 10f;
     [SerializeField] float maxSpeed = 20f;
     [SerializeField] float speedIncrement = 0.5f;
-    [SerializeField] int hitsBeforeSpeedIncrease = 1; // How many block hits before increasing speed
+    [SerializeField] int hitsBeforeSpeedIncrease = 1;
 
     [Header("UI Animation")]
     [SerializeField] TextMeshProUGUI LoseText;
-    [SerializeField] UIAutoAnimation uiAnimation; // Reference to UIAutoAnimation component
+    [SerializeField] UIAutoAnimation uiAnimation;
 
     [Header("Scene Reload Settings")]
-    [SerializeField] float delayBeforeReload = 2f; // Time to wait before reloading scene
+    [SerializeField] float delayBeforeReload = 2f;
 
-    private Rigidbody2D rb;
-    private Vector2 lastVelocity;
-    private int hitCount = 0; // Counter for block hits
+    Rigidbody2D rb;
+    Vector2 lastVelocity;
+    int hitCount = 0;
 
-    void Start()
-    {
+    void Start() {
         rb = GetComponent<Rigidbody2D>();
-        // If uiAnimation is not assigned in inspector, try to find it
-        if (uiAnimation == null)
-        {
-            uiAnimation = FindAnyObjectByType<UIAutoAnimation>();
-        }
+        if (uiAnimation == null) uiAnimation = FindAnyObjectByType<UIAutoAnimation>();
         LaunchBall();
     }
 
-    void Update()
-    {
-        // Store the velocity for collision calculations
+    void Update() {
         lastVelocity = rb.linearVelocity;
-        // Clamp the speed to prevent it from getting too fast
+
         if (rb.linearVelocity.magnitude > maxSpeed)
-        {
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
-        }
-        // Prevent the ball from getting stuck moving too vertically
-        if (Mathf.Abs(rb.linearVelocity.y) > Mathf.Abs(rb.linearVelocity.x) * 3f)
-        {
+
+        // keep trajectory from being too vertical
+        if (Mathf.Abs(rb.linearVelocity.y) > Mathf.Abs(rb.linearVelocity.x) * 3f) {
             float newY = Mathf.Sign(rb.linearVelocity.y) * Mathf.Abs(rb.linearVelocity.x) * 2f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, newY);
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Calculate reflection
+    void OnCollisionEnter2D(Collision2D collision) {
         Vector2 direction = Vector2.Reflect(lastVelocity.normalized, collision.contacts[0].normal);
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Start the game over coroutine
+        if (collision.gameObject.CompareTag("Player")) {
             StartCoroutine(HandleGameOver());
-
-            // Destroy the player object
             Destroy(collision.gameObject);
+            return;
         }
-        else if (collision.gameObject.CompareTag("Ground"))
-        {
-            // Increment hit count when colliding with a block
-            hitCount++;
 
-            // Increase speed after specified number of hits
-            if (hitCount >= hitsBeforeSpeedIncrease)
-            {
+        if (collision.gameObject.CompareTag("Ground")) {
+            hitCount++;
+            if (hitCount >= hitsBeforeSpeedIncrease) {
                 IncreaseSpeed();
-                hitCount = 0; // Reset counter
+                hitCount = 0;
             }
         }
 
-        // Handle wall collisions
         if (collision.gameObject.CompareTag("Wall"))
-        {
             HandleWallCollision(direction);
-        }
     }
 
-    // Method to increase the ball's speed
-    private void IncreaseSpeed()
-    {
-        float currentSpeed = rb.linearVelocity.magnitude;
-        float newSpeed = Mathf.Min(currentSpeed + speedIncrement, maxSpeed);
-
-        // Apply the new speed while maintaining direction
-        rb.linearVelocity = rb.linearVelocity.normalized * newSpeed;
-
-        Debug.Log($"Speed increased to: {newSpeed}");
+    void IncreaseSpeed() {
+        float current = rb.linearVelocity.magnitude;
+        float next = Mathf.Min(current + speedIncrement, maxSpeed);
+        rb.linearVelocity = rb.linearVelocity.normalized * next;
+        Debug.Log($"Speed increased to: {next}");
     }
 
-    // Coroutine to handle game over sequence
-    IEnumerator HandleGameOver()
-    {
-        // Stop the ball movement
+    IEnumerator HandleGameOver() {
         rb.linearVelocity = Vector2.zero;
 
-        // Show the lose text and trigger UI animation
-        if (uiAnimation != null)
-        {
-            LoseText.gameObject.SetActive(true); // Show the lose text
-            uiAnimation.EntranceAnimation(); // This will trigger the entrance animation
+        if (uiAnimation != null) {
+            LoseText.gameObject.SetActive(true);
+            uiAnimation.EntranceAnimation();
         }
 
-        // Wait for the specified delay (allows UI animation to complete)
         yield return new WaitForSeconds(delayBeforeReload);
-
-        // Reload the current scene
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
     void HandleWallCollision(Vector2 direction)
-    {
-        // Simple reflection for walls
-        rb.linearVelocity = direction * lastVelocity.magnitude;
-    }
+        => rb.linearVelocity = direction * lastVelocity.magnitude;
 
-    void LaunchBall()
-    {
-        // Random direction (left or right)
+    void LaunchBall() {
         float x = Random.Range(0, 2) == 0 ? -1 : 1;
         float y = Random.Range(-1f, 1f);
-        Vector2 direction = new Vector2(x, y).normalized;
-        rb.linearVelocity = direction * speed;
+        rb.linearVelocity = new Vector2(x, y).normalized * speed;
     }
 
-    // Public method to manually set ball direction (useful for testing)
-    public void SetDirection(Vector2 direction)
-    {
-        rb.linearVelocity = direction.normalized * speed;
-    }
+    public void SetDirection(Vector2 direction) => rb.linearVelocity = direction.normalized * speed;
+    public float GetCurrentSpeed() => rb.linearVelocity.magnitude;
 
-    // Public method to get current speed
-    public float GetCurrentSpeed()
-    {
-        return rb.linearVelocity.magnitude;
-    }
-
-    // Public methods to trigger UI animations
-    public void TriggerEntranceAnimation()
-    {
-        if (uiAnimation != null)
-        {
-            uiAnimation.EntranceAnimation();
-        }
-    }
-
-    public void TriggerExitAnimation()
-    {
-        if (uiAnimation != null)
-        {
-            uiAnimation.ExitAnimation();
-        }
-    }
+    public void TriggerEntranceAnimation() { if (uiAnimation != null) uiAnimation.EntranceAnimation(); }
+    public void TriggerExitAnimation() { if (uiAnimation != null) uiAnimation.ExitAnimation(); }
 }

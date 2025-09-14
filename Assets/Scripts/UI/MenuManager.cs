@@ -1,84 +1,53 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-
-public class MenuManager : MonoBehaviour
-{
+public class MenuManager : MonoBehaviour {
     [Header("Menu Objects")]
     [SerializeField] GameObject mainMenuCanvasGO;
     [SerializeField] GameObject settingsMenuCanvasGO;
     [SerializeField] GameObject controlsMenuCanvasGO;
 
-
     [Header("First Selected Options")]
     [SerializeField] GameObject mainMenuFirst;
     [SerializeField] GameObject settingsMenuFirst;
 
+    void Start() {
+        if (mainMenuCanvasGO) mainMenuCanvasGO.SetActive(true);
+        if (settingsMenuCanvasGO) settingsMenuCanvasGO.SetActive(false);
+        if (controlsMenuCanvasGO) controlsMenuCanvasGO.SetActive(false);
 
-    private bool isPaused;
-    private void Start()
-    {
-        mainMenuCanvasGO.SetActive(true);
-        settingsMenuCanvasGO.SetActive(false);
-        controlsMenuCanvasGO.SetActive(false);
-
-    }
-    private void Update()
-    {
-
+        if (mainMenuFirst) EventSystem.current?.SetSelectedGameObject(mainMenuFirst);
     }
 
-    private void StartGame()
-    {
-        SceneManager.LoadSceneAsync(1);
-    }
-    private void OpenSettingsMenuHandle()
-    {
-        mainMenuCanvasGO.SetActive(false);
-        controlsMenuCanvasGO.SetActive(false);
-        settingsMenuCanvasGO.SetActive(true);
+    // ---- internal handlers ----
+    void StartGame() => SceneManager.LoadSceneAsync(1);
 
-    }
-    private void OpenMainMenuHandle()
-    {
-        mainMenuCanvasGO.SetActive(true);
-        controlsMenuCanvasGO.SetActive(false);
+    void OpenSettingsMenuHandle() {
+        if (mainMenuCanvasGO) mainMenuCanvasGO.SetActive(false);
+        if (controlsMenuCanvasGO) controlsMenuCanvasGO.SetActive(false);
+        if (settingsMenuCanvasGO) settingsMenuCanvasGO.SetActive(true);
 
-        settingsMenuCanvasGO.SetActive(false);
-
-        EventSystem.current.SetSelectedGameObject(settingsMenuFirst);
+        if (settingsMenuFirst) EventSystem.current?.SetSelectedGameObject(settingsMenuFirst);
     }
 
-    private void OpenControlsMenuHandle()
-    {
-        mainMenuCanvasGO.SetActive(false);
-        controlsMenuCanvasGO.SetActive(true);
+    void OpenMainMenuHandle() {
+        if (mainMenuCanvasGO) mainMenuCanvasGO.SetActive(true);
+        if (controlsMenuCanvasGO) controlsMenuCanvasGO.SetActive(false);
+        if (settingsMenuCanvasGO) settingsMenuCanvasGO.SetActive(false);
 
-        settingsMenuCanvasGO.SetActive(false);
+        if (mainMenuFirst) EventSystem.current?.SetSelectedGameObject(mainMenuFirst);
     }
 
-
-    public void OnStartGame()
-    {
-        StartGame();
+    void OpenControlsMenuHandle() {
+        if (mainMenuCanvasGO) mainMenuCanvasGO.SetActive(false);
+        if (controlsMenuCanvasGO) controlsMenuCanvasGO.SetActive(true);
+        if (settingsMenuCanvasGO) settingsMenuCanvasGO.SetActive(false);
     }
 
-    public void OnSettingsPress()
-    {
-        OpenSettingsMenuHandle();
-    }
-
-    public void OnSettingsBackPress()
-    {
-        OpenMainMenuHandle();
-    }
-
-    public void OnControlsPress()
-    {
-        OpenControlsMenuHandle();
-    }
-
- 
+    // ---- UI events ----
+    public void OnStartGame() => StartGame();
+    public void OnSettingsPress() => OpenSettingsMenuHandle();
+    public void OnSettingsBackPress() => OpenMainMenuHandle();
+    public void OnControlsPress() => OpenControlsMenuHandle();
 }
