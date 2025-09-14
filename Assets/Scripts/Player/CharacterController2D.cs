@@ -37,18 +37,24 @@ public class CharacterController2D : MonoBehaviour
     private Animator animator;
     public ParticleSystem particleJumpUp; //Trail particles
     public ParticleSystem particleJumpDown; //Explosion particles
-
     private float jumpWallStartX = 0;
     private float jumpWallDistX = 0; //Distance between player and wall
     private bool limitVelOnWallJump = false; //For limit wall jump distance with low fps
+
+
+
+
+
+    private bool prevFallingNoDash = false;
 
     [Header("Events")]
     [Space]
 
     public UnityEvent OnFallEvent;
     public UnityEvent OnLandEvent;
+    public UnityEvent OnFallingNoDash; // Add this with your other events
 
-    
+
 
     [System.Serializable]
     public class BoolEvent : UnityEvent<bool> { }
@@ -57,7 +63,6 @@ public class CharacterController2D : MonoBehaviour
     {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-
         if (OnFallEvent == null)
             OnFallEvent = new UnityEvent();
 
@@ -71,6 +76,7 @@ public class CharacterController2D : MonoBehaviour
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
 
+
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
         Debug.Log("colliders: " + colliders.Length); //Debug colliders
@@ -82,7 +88,7 @@ public class CharacterController2D : MonoBehaviour
                 break; // Exit loop once we find ground
             }
         }
-        
+
 
         // Handle landing - only when transitioning from not grounded to grounded
         if (m_Grounded && !wasGrounded)
@@ -124,6 +130,17 @@ public class CharacterController2D : MonoBehaviour
             }
             prevVelocityX = m_Rigidbody2D.linearVelocity.x;
         }
+        #region Pausing Movement sound when falling
+        // Check for falling without dashing
+        bool currentFallingNoDash = !m_Grounded && !isDashing;
+
+        if (currentFallingNoDash && !prevFallingNoDash)
+        {
+            OnFallingNoDash.Invoke();
+        }
+
+        prevFallingNoDash = currentFallingNoDash; 
+        #endregion
 
         if (limitVelOnWallJump)
         {
@@ -153,7 +170,7 @@ public class CharacterController2D : MonoBehaviour
     }
 
 
-   
+
     public void Move(float move, bool jump, bool dash)
     {
         if (canMove)
@@ -375,4 +392,21 @@ public class CharacterController2D : MonoBehaviour
         animator.SetBool("IsDoubleJumping", false);
         animator.SetBool("JumpUp", false);
     }
+    public bool IsGrounded() { return m_Grounded; }
+    public bool IsDashing() { return isDashing; }
+
+    #region To disable run sound
+
+    public void AddFallingNoDashListener(UnityAction action)
+    {
+        OnFallingNoDash.AddListener(action);
+    }
+
+    public void RemoveFallingNoDashListener(UnityAction action)
+    {
+        OnFallingNoDash.RemoveListener(action);
+    } 
+    #endregion
 }
+
+   

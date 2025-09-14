@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float speed = 10f;
     [SerializeField] float maxSpeed = 20f;
     [SerializeField] float speedIncrement = 0.5f;
+    [SerializeField] int hitsBeforeSpeedIncrease = 1; // How many block hits before increasing speed
 
     [Header("UI Animation")]
     [SerializeField] TextMeshProUGUI LoseText;
@@ -19,6 +20,7 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 lastVelocity;
+    private int hitCount = 0; // Counter for block hits
 
     void Start()
     {
@@ -61,6 +63,36 @@ public class Enemy : MonoBehaviour
             // Destroy the player object
             Destroy(collision.gameObject);
         }
+        else if (collision.gameObject.CompareTag("Ground"))
+        {
+            // Increment hit count when colliding with a block
+            hitCount++;
+
+            // Increase speed after specified number of hits
+            if (hitCount >= hitsBeforeSpeedIncrease)
+            {
+                IncreaseSpeed();
+                hitCount = 0; // Reset counter
+            }
+        }
+
+        // Handle wall collisions
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            HandleWallCollision(direction);
+        }
+    }
+
+    // Method to increase the ball's speed
+    private void IncreaseSpeed()
+    {
+        float currentSpeed = rb.linearVelocity.magnitude;
+        float newSpeed = Mathf.Min(currentSpeed + speedIncrement, maxSpeed);
+
+        // Apply the new speed while maintaining direction
+        rb.linearVelocity = rb.linearVelocity.normalized * newSpeed;
+
+        Debug.Log($"Speed increased to: {newSpeed}");
     }
 
     // Coroutine to handle game over sequence

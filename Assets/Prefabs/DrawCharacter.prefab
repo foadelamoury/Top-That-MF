@@ -87,7 +87,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_JumpForce: 850
-  m_MovementSmoothing: 0.04991
+  m_MovementSmoothing: 0.05
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 114231493902538710}
   animator: {fileID: 95975118031919256}
-  runSpeed: 90
+  runSpeed: 40
 --- !u!212 &212971026275759962
 SpriteRenderer:
   m_ObjectHideFlags: 0
