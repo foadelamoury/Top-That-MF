@@ -32,9 +32,12 @@ public class OpenDoor : MonoBehaviour {
         int current = SceneManager.GetActiveScene().buildIndex;
         int next = current + 1;
 
-        if (next < SceneManager.sceneCountInBuildSettings)
-            SceneManager.LoadScene(next);
+        if (next < SceneManager.sceneCountInBuildSettings) 
+        {
+            SceneManager.LoadSceneAsync(next);
+            SceneManager.LoadScene("Timing", LoadSceneMode.Additive);
+        }
         else
-            SceneManager.LoadScene(0);
+            SceneManager.LoadSceneAsync(0);
     }
 }
