@@ -21,7 +21,11 @@ public class MenuManager : MonoBehaviour {
     }
 
     // ---- internal handlers ----
-    void StartGame() => SceneManager.LoadSceneAsync(1);
+    void StartGame() {
+        SceneManager.LoadSceneAsync(1);
+        SceneManager.LoadScene("Timing", LoadSceneMode.Additive);
+        Debug.Log("The Timing should be added");
+    }
 
     void OpenSettingsMenuHandle() {
         if (mainMenuCanvasGO) mainMenuCanvasGO.SetActive(false);
