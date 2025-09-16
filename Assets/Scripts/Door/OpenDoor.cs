@@ -26,7 +26,8 @@ public class OpenDoor : MonoBehaviour {
         StartCoroutine(DelayedSceneReload());
     }
 
-    IEnumerator DelayedSceneReload() {
+    IEnumerator DelayedSceneReload() 
+    {
         yield return new WaitForSeconds(delayBeforeReload);
 
         int current = SceneManager.GetActiveScene().buildIndex;
@@ -40,4 +41,7 @@ public class OpenDoor : MonoBehaviour {
         else
             SceneManager.LoadSceneAsync(0);
     }
+
+  
+
 }

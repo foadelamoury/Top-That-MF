@@ -1,56 +1,45 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
+[System.Serializable]
+public class LevelTimeData {
+    public string levelName;
+    public float completionTime;
+}
 
 public class TimerManager : MonoBehaviour {
-
-
-    // Stopwatch
-    bool stopwatchActive = false;
     float currentTime;
     public TextMeshProUGUI currentTimeText;
-
-    // Score
-    int score;
-    public TextMeshProUGUI scoreText;
-    public float multiplier = 5;
+    string currentLevelName;
 
     void Start() {
         currentTime = 0;
-        score = 0;
-        scoreText.text = score.ToString(); // Initialize score text
+        currentLevelName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
     }
 
     void Update() {
-        if (stopwatchActive == true) {
-            currentTime = currentTime + Time.deltaTime;
-
-            // Score Part 2
-            score = Mathf.RoundToInt(currentTime * multiplier);
-            scoreText.text = score.ToString();
-        }
-
+        currentTime += Time.deltaTime;
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         currentTimeText.text = time.ToString(@"mm\:ss\:fff");
     }
 
-    public void StartStopwatch() {
-        stopwatchActive = true;
+    void OnDestroy() {
+        SaveLevelTime();
+        
     }
 
-    public void StopStopwatch() {
-        stopwatchActive = false;
+    void SaveLevelTime() {
+        LevelTimeData data = new LevelTimeData {
+            levelName = currentLevelName,
+            completionTime = currentTime
+        };
+
+        string json = JsonUtility.ToJson(data, true);
+        string filePath = Path.Combine(Application.persistentDataPath, $"{currentLevelName}_time.json");
+        File.WriteAllText(filePath, json);
+
+        Debug.Log($"Time saved for {currentLevelName}: {currentTime:F2}s");
     }
-
-    public void ResetStopwatchAndScore() {
-        currentTime = 0;
-        stopwatchActive = false;
-        score = 0;
-        currentTimeText.text = "00:00:000"; // Reset time text
-        scoreText.text = score.ToString(); // Reset score text
-    }
-
-
 }
