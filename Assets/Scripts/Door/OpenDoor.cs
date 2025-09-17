@@ -23,6 +23,7 @@ public class OpenDoor : MonoBehaviour {
             uiAnimation.EntranceAnimation();
         }
         animator.SetTrigger("IsOpen");
+        collision.gameObject.SetActive(false);
         StartCoroutine(DelayedSceneReload());
     }
 
@@ -35,8 +36,12 @@ public class OpenDoor : MonoBehaviour {
 
         if (next < SceneManager.sceneCountInBuildSettings) 
         {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(next);
+            string currentSceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+            
             SceneManager.LoadSceneAsync(next);
-            SceneManager.LoadScene("Timing", LoadSceneMode.Additive);
+            
+            if (next != 5) SceneManager.LoadScene("Timing", LoadSceneMode.Additive);
         }
         else
             SceneManager.LoadSceneAsync(0);
